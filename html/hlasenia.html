@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Hlásenia testerov k projektu Lantern Woods – filtrovanie, zmena stavu a priority.">
+  <title>Hlásenia · Lantern Woods · PlaytestHub</title>
+  <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/hlasenia.css">
+</head>
+<body>
+  <a class="skip-link" href="#obsah">Preskočiť na obsah</a>
+
+  <!-- Hlavička: logo, názov, hlavné menu, účet -->
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="index.html">
+        <img class="brand__logo" src="img/logo.svg" alt="" width="36" height="36">
+        <span class="brand__name">PlaytestHub</span>
+      </a>
+
+      <!-- Na menších obrazovkách sa menu otvára cez checkbox (bez JavaScriptu) -->
+      <input class="nav-toggle visually-hidden" type="checkbox" id="nav-toggle">
+      <label class="nav-toggle__button" for="nav-toggle">
+        <span class="icon icon--menu" aria-hidden="true"></span>
+        <span class="visually-hidden">Zobraziť menu</span>
+      </label>
+
+      <nav class="main-nav" aria-label="Hlavné menu">
+        <ul class="main-nav__list">
+          <li><a class="main-nav__link" href="#">Katalóg</a></li>
+          <li><a class="main-nav__link" href="#">Môj prehľad</a></li>
+          <li><a class="main-nav__link" href="index.html" aria-current="true">Moje projekty</a></li>
+        </ul>
+      </nav>
+
+      <details class="account">
+        <summary class="account__summary">
+          <span class="avatar" aria-hidden="true">ŠK</span>
+          <span class="account__text">
+            <span class="account__name">Šimon K.</span>
+            <span class="account__role">Vývojár</span>
+          </span>
+          <span class="visually-hidden">Menu účtu</span>
+          <span class="icon icon--chevron account__chevron" aria-hidden="true"></span>
+        </summary>
+        <ul class="account__menu">
+          <li><a href="#">Môj profil</a></li>
+          <li><a href="#">Nastavenia účtu</a></li>
+          <li class="account__menu-sep"><a href="#">Odhlásiť sa</a></li>
+        </ul>
+      </details>
+    </div>
+  </header>
+
+  <main class="page" id="obsah">
+    <div class="container">
+      <!-- Hlavička stránky: omrvinky, nadpis, akcie -->
+      <header class="page-header">
+        <nav class="breadcrumbs" aria-label="Omrvinky">
+          <ol class="breadcrumbs__list">
+            <li><a href="#">Moje projekty</a></li>
+            <li><a href="index.html">Lantern Woods</a></li>
+            <li aria-current="page">Hlásenia</li>
+          </ol>
+        </nav>
+        <div class="page-header__row">
+          <div>
+            <h1 class="page-header__title">Hlásenia</h1>
+            <p class="page-header__lead">Chyby a spätná väzba testerov ku všetkým buildom projektu</p>
+          </div>
+          <div class="page-header__actions">
+            <a class="btn" href="#">Spravovať tagy</a>
+          </div>
+        </div>
+      </header>
+
+      <div class="project-layout">
+        <!-- Menu projektu -->
+        <aside class="project-menu" aria-label="Projekt">
+          <div class="project-card">
+            <img class="project-card__cover" src="img/lantern-woods.svg" alt="" width="56" height="56">
+            <div>
+              <p class="project-card__name">Lantern Woods</p>
+              <p class="project-card__meta">Verejný · testovanie otvorené</p>
+            </div>
+          </div>
+          <nav class="project-nav" aria-label="Menu projektu">
+            <ul class="project-nav__list">
+              <li><a class="project-nav__link" href="index.html">Prehľad</a></li>
+              <li><a class="project-nav__link" href="#">Buildy</a></li>
+              <li><a class="project-nav__link" href="hlasenia.html" aria-current="page">Hlásenia <span class="badge">12 nových</span></a></li>
+              <li><a class="project-nav__link" href="#">Dotazníky</a></li>
+              <li><a class="project-nav__link" href="#">Odpovede</a></li>
+              <li><a class="project-nav__link" href="#">Testeri</a></li>
+              <li><a class="project-nav__link" href="#">Štatistiky</a></li>
+              <li><a class="project-nav__link" href="#">Nastavenia projektu</a></li>
+            </ul>
+          </nav>
+        </aside>
+
+        <div class="project-content">
+          <!-- Filtre -->
+          <form class="report-filters" id="filters" action="hlasenia.html" method="get" role="search" aria-label="Filtrovanie hlásení">
+            <fieldset class="status-tabs">
+              <legend class="visually-hidden">Stav hlásenia</legend>
+              <label class="status-tab">
+                <input type="radio" name="stav" value="" checked>
+                Všetky <span class="status-tab__count">42</span>
+              </label>
+              <label class="status-tab">
+                <input type="radio" name="stav" value="nove">
+                <span class="icon icon--new" aria-hidden="true"></span>
+                Nové <span class="status-tab__count">12</span>
+              </label>
+              <label class="status-tab">
+                <input type="radio" name="stav" value="potvrdene">
+                <span class="icon icon--confirmed" aria-hidden="true"></span>
+                Potvrdené <span class="status-tab__count">5</span>
+              </label>
+              <label class="status-tab">
+                <input type="radio" name="stav" value="riesi-sa">
+                <span class="icon icon--progress" aria-hidden="true"></span>
+                Rieši sa <span class="status-tab__count">4</span>
+              </label>
+              <label class="status-tab">
+                <input type="radio" name="stav" value="opravene">
+                <span class="icon icon--fixed" aria-hidden="true"></span>
+                Opravené <span class="status-tab__count">18</span>
+              </label>
+              <label class="status-tab">
+                <input type="radio" name="stav" value="zamietnute">
+                <span class="icon icon--rejected" aria-hidden="true"></span>
+                Zamietnuté <span class="status-tab__count">3</span>
+              </label>
+            </fieldset>
+
+            <div class="filter-panel">
+              <div class="filter-grid">
+                <div class="field field--search">
+                  <label class="field__label" for="filter-q">Hľadať v názve</label>
+                  <div class="input-icon">
+                    <span class="icon icon--search" aria-hidden="true"></span>
+                    <input class="input" type="search" id="filter-q" name="q" placeholder="napr. pád, rebrík, zvuk…">
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="filter-build">Build</label>
+                  <div class="select">
+                    <select id="filter-build" name="build">
+                      <option value="">Všetky buildy</option>
+                      <option value="0.4.1">0.4.1</option>
+                      <option value="0.4.0">0.4.0</option>
+                      <option value="0.3.2">0.3.2</option>
+                      <option value="0.3.1">0.3.1</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="filter-type">Typ</label>
+                  <div class="select">
+                    <select id="filter-type" name="typ">
+                      <option value="">Všetky typy</option>
+                      <option value="chyba">Chyba</option>
+                      <option value="pad">Pád</option>
+                      <option value="navrh">Návrh</option>
+                      <option value="ine">Iné</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="filter-severity">Závažnosť</label>
+                  <div class="select">
+                    <select id="filter-severity" name="zavaznost">
+                      <option value="">Všetky</option>
+                      <option value="kriticka">Kritická</option>
+                      <option value="vysoka">Vysoká</option>
+                      <option value="stredna">Stredná</option>
+                      <option value="nizka">Nízka</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="filter-tags">
+                <span class="filter-tags__label" id="filter-tags-label">Tagy</span>
+                <div class="chips" role="group" aria-labelledby="filter-tags-label">
+                  <label class="chip"><input type="checkbox" name="tag" value="grafika">Grafika</label>
+                  <label class="chip"><input type="checkbox" name="tag" value="zvuk">Zvuk</label>
+                  <label class="chip"><input type="checkbox" name="tag" value="ovladanie">Ovládanie</label>
+                  <label class="chip"><input type="checkbox" name="tag" value="ui">UI</label>
+                  <label class="chip"><input type="checkbox" name="tag" value="vykon">Výkon</label>
+                  <label class="chip"><input type="checkbox" name="tag" value="ukladanie">Ukladanie</label>
+                </div>
+                <button class="filter-reset" type="reset">Zrušiť filtre</button>
+              </div>
+
+              <!-- filtre sa neskôr budú aplikovať cez AJAX; tlačidlo umožní odoslanie klávesou Enter -->
+              <button class="visually-hidden" type="submit">Filtrovať</button>
+            </div>
+          </form>
+
+          <!-- Zoznam hlásení -->
+          <section aria-labelledby="reports-title">
+            <h2 class="visually-hidden" id="reports-title">Zoznam hlásení</h2>
+
+            <div class="results-bar">
+              <p class="results-bar__count">Zobrazené <strong>1–8</strong> z 42 hlásení</p>
+              <div class="sort">
+                <label class="sort__label" for="sort">Zoradiť podľa</label>
+                <div class="select">
+                  <select id="sort" name="zoradit" form="filters">
+                    <option value="najnovsie">Najnovšie</option>
+                    <option value="najstarsie">Najstaršie</option>
+                    <option value="zavaznost">Najvyššia závažnosť</option>
+                    <option value="potvrdenia">Najviac potvrdení</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-card">
+              <table class="reports">
+                <caption class="visually-hidden">Hlásenia projektu Lantern Woods, strana 1 z 6</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Hlásenie</th>
+                    <th scope="col">Typ</th>
+                    <th scope="col">Závažnosť</th>
+                    <th scope="col">Build</th>
+                    <th scope="col"><abbr title="Počet potvrdení">+1</abbr></th>
+                    <th scope="col">Stav</th>
+                    <th scope="col">Priorita</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="reports__id">#142</td>
+                    <td class="reports__title">
+                      <a class="report-link" href="#">Hra spadne pri načítaní uloženej pozície</a>
+                      <div class="report-meta">
+                        <ul class="tags" aria-label="Tagy">
+                          <li class="tag">Ukladanie</li>
+                        </ul>
+                        <span>marek_t · <time datetime="2026-10-20T16:10">pred 2 h</time></span>
+                        <span class="meta-count"><span class="icon icon--comment" aria-hidden="true"></span><span class="visually-hidden">Komentáre:</span>2</span>
+                        <span class="meta-count"><span class="icon icon--clip" aria-hidden="true"></span><span class="visually-hidden">Prílohy:</span>1</span>
+                      </div>
+                    </td>
+                    <td class="reports__type">Pád</td>
+                    <td class="reports__severity"><span class="severity severity--critical">Kritická</span></td>
+                    <td class="reports__build" data-label="Build"><span class="reports__version">0.4.1</span> <span class="reports__platform">Windows</span></td>
+                    <td class="reports__votes" data-label="Potvrdenia">+5</td>
+                    <td class="reports__status" data-label="Stav">
+                      <div class="select select--compact select--status">
+                        <select aria-label="Stav hlásenia #142">
+                          <option value="nove" selected>Nové</option>
+                          <option value="potvrdene">Potvrdené</option>
+                          <option value="riesi-sa">Rieši sa</option>
+                          <option value="opravene">Opravené</option>
+                          <option value="zamietnute">Zamietnuté</option>
+                        </select>
+                      </div>
+                    </td>
+                    <td class="reports__priority" data-label="Priorita">
+                      <div class="select select--compact select--priority">
+                        <select aria-label="Priorita hlásenia #142">
+                          <option value="" selected>Nastaviť</option>
+                          <option value="nizka">Nízka</option>
+                          <option value="stredna">Stredná</option>
+                          <option value="vysoka">Vysoká</option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="reports__id">#141</td>
+                    <td class="reports__title">
+                      <a class="report-link" href="#">Postava sa zasekne o rebrík v 2. kapitole</a>
+                      <div class="report-meta">
+                        <ul class="tags" aria-label="Tagy">
+                          <li class="tag">Ovládanie</li>
+                        </ul>
+                        <span>lucia.h · <time datetime="2026-10-20T13:05">pred 5 h</time></span>
+                        <span class="meta-count"><span class="icon icon--comment" aria-hidden="true"></span><span class="visually-hidden">Komentáre:</span>4</span>
+                        <span class="meta-count"><span class="icon icon--clip" aria-hidden="true"></span><span class="visually-hidden">Prílohy:</span>2</span>
+                      </div>
+                    </td>
+                    <td class="reports__type">Chyba</td>
+                    <td class="reports__severity"><span class="severity severity--high">Vysoká</span></td>
+                    <td class="reports__build" data-label="Build"><span class="reports__version">0.4.1</span> <span class="reports__platform">Windows</span></td>
+                    <td class="reports__votes" data-label="Potvrdenia">+3</td>
+                    <td class="reports__status" data-label="Stav">
+                      <div class="select select--compact select--status">
+                        <select aria-label="Stav hlásenia #141">
+                          <option value="nove" selected>Nové</option>
+                          <option value="potvrdene">Potvrdené</option>
+                          <option value="riesi-sa">Rieši sa</option>
+                          <option value="opravene">Opravené</option>
+                          <option value="zamietnute">Zamietnuté</option>
+                        </select>
+                      </div>
+                    </td>
+                    <td class="reports__priority" data-label="Priorita">
+                      <div class="select select--compact select--priority">
+                        <select aria-label="Priorita hlásenia #141">
+                          <option value="">Nastaviť</option>
+                          <option value="nizka">Nízka</option>
+                          <option value="stredna">Stredná</option>
+                          <option value="vysoka" selected>Vysoká</option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="reports__id">#139</td>
+                    <td class="reports__title">
+                      <a class="report-link" href="#">Hudba v menu hrá dvakrát cez seba</a>
+                      <div class="report-meta">
+                        <ul class="tags" aria-label="Tagy">
+                          <li class="tag">Zvuk</li>
+                        </ul>
+                        <span>kubo · <time datetime="2026-10-19">včera</time></span>
+                      </div>
+                    </td>
+                    <td class="reports__type">Chyba</td>
+                    <td class="reports__severity"><span class="severity severity--medium">Stredná</span></td>
+                    <td class="reports__build" data-label="Build"><span class="reports__version">0.4.1</span> <span class="reports__platform">macOS</span></td>
+                    <td class="reports__votes" data-label="Potvrdenia">+1</td>
+                    <td class="reports__status" data-label="Stav">
+                      <div class="select select--compact select--status">
+                        <select aria-label="Stav hlásenia #139">
+                          <option value="nove">Nové</option>
+                          <option value="potvrdene" selected>Potvrdené</option>
+                          <option value="riesi-sa">Rieši sa</option>
+                          <option value="opravene">Opravené</option>
+                          <option value="zamietnute">Zamietnuté</option>
+                        </select>
+                      </div>
+                    </td>
+                    <td class="reports__priority" data-label="Priorita">
+                      <div class="select select--compact select--priority">
+                        <select aria-label="Priorita hlásenia #139">
+                          <option value="" selected>Nastaviť</option>
+                          <option value="nizka">Nízka</option>
+                          <option value="stredna">Stredná</option>
+                          <option value="vysoka">Vysoká</option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="reports__id">#137</td>
+                    <td class="reports__title">
+                      <a class="report-link" href="#">Pridať možnosť zmeniť klávesy ovládania</a>
+                      <div class="report-meta">
+                        <ul class="tags" aria-label="Tagy">
+                          <li class="tag">Ovládanie</li>
+                          <li class="tag">UI</li>
+                        </ul>
+                        <span>petra_v · <time datetime="2026-10-19">včera</time></span>
+                        <span class="meta-count"><span class="icon icon--comment" aria-hidden="true"></span><span class="visually-hidden">Komentáre:</span>6</span>
+                      </div>
+                    </td>
+                    <td class="reports__type">Návrh</td>
+                    <td class="reports__severity"><span class="severity severity--low">Nízka</span></td>
+                    <td class="reports__build" data-label="Build"><span class="reports__version">0.4.0</span> <span class="reports__platform">Windows</span></td>
+                    <td class="reports__votes" data-label="Potvrdenia">+8</td>
+                    <td class="reports__status" data-label="Stav">
+                      <div class="select select--compact select--status">
+                        <select aria-label="Stav hlásenia #137">
+                          <option value="nove">Nové</option>
+                          <option value="potvrdene" selected>Potvrdené</option>
+                          <option value="riesi-sa">Rieši sa</option>
+                          <option value="opravene">Opravené</option>
+                          <option value="zamietnute">Zamietnuté</option>
+                        </select>
+                      </div>
+                    </td>
+                    <td class="reports__priority" data-label="Priorita">
+                      <div class="select select--compact select--priority">
+                        <select aria-label="Priorita hlásenia #137">
+                          <option value="">Nastaviť</option>
+                          <option value="nizka">Nízka</option>
+                          <option value="stredna" selected>Stredná</option>
+                          <option value="vysoka">Vysoká</option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="reports__id">#135</td>
+                    <td class="reports__title">
+                      <a class="report-link" href="#">FPS klesá pod 30 v lese počas dažďa</a>
+                      <div class="report-meta">
+                        <ul class="tags" aria-label="Tagy">
+                          <li class="tag">Výkon</li>
+                          <li class="tag">Grafika</li>
+                        </ul>
+                        <span>marek_t · <time datetime="2026-10-14">14. 10.</time></span>
+                        <span class="meta-count"><span class="icon icon--comment" aria-hidden="true"></span><span class="visually-hidden">Komentáre:</span>3</span>
+                        <span class="meta-count"><span class="icon icon--clip" aria-hidden="true"></span><span class="visually-hidden">Prílohy:</span>3</span>
+                      </div>
+                    </td>
+                    <td class="reports__type">Chyba</td>
+                    <td class="reports__severity"><span class="severity severity--high">Vysoká</span></td>
+                    <td class="reports__build" data-label="Build"><span class="reports__version">0.4.0</span> <span class="reports__platform">Windows</span></td>
+                    <td class="reports__votes" data-label="Potvrdenia">+2</td>
+                    <td class="reports__status" data-label="Stav">
+                      <div class="select select--compact select--status">
+                        <select aria-label="Stav hlásenia #135">
+                          <option value="nove">Nové</option>
+                          <option value="potvrdene">Potvrdené</option>
+                          <option value="riesi-sa" selected>Rieši sa</option>
+                          <option value="opravene">Opravené</option>
+                          <option value="zamietnute">Zamietnuté</option>
+                        </select>
+                      </div>
+                    </td>
+                    <td class="reports__priority" data-label="Priorita">
+                      <div class="select select--compact select--priority">
+                        <select aria-label="Priorita hlásenia #135">
+                          <option value="">Nastaviť</option>
+                          <option value="nizka">Nízka</option>
+                          <option value="stredna">Stredná</option>
+                          <option value="vysoka" selected>Vysoká</option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="reports__id">#131</td>
+                    <td class="reports__title">
+                      <a class="report-link" href="#">Text v dialógu presahuje okno</a>
+                      <div class="report-meta">
+                        <ul class="tags" aria-label="Tagy">
+                          <li class="tag">UI</li>
+                        </ul>
+                        <span>lucia.h · <time datetime="2026-10-12">12. 10.</time></span>
+                        <span class="meta-count"><span class="icon icon--comment" aria-hidden="true"></span><span class="visually-hidden">Komentáre:</span>1</span>
+                        <span class="meta-count"><span class="icon icon--clip" aria-hidden="true"></span><span class="visually-hidden">Prílohy:</span>1</span>
+                      </div>
+                    </td>
+                    <td class="reports__type">Chyba</td>
+                    <td class="reports__severity"><span class="severity severity--low">Nízka</span></td>
+                    <td class="reports__build" data-label="Build"><span class="reports__version">0.4.0</span> <span class="reports__platform">macOS</span></td>
+                    <td class="reports__votes is-zero" data-label="Potvrdenia">0</td>
+                    <td class="reports__status" data-label="Stav">
+                      <div class="select select--compact select--status">
+                        <select aria-label="Stav hlásenia #131">
+                          <option value="nove">Nové</option>
+                          <option value="potvrdene">Potvrdené</option>
+                          <option value="riesi-sa">Rieši sa</option>
+                          <option value="opravene" selected>Opravené</option>
+                          <option value="zamietnute">Zamietnuté</option>
+                        </select>
+                      </div>
+                    </td>
+                    <td class="reports__priority" data-label="Priorita">
+                      <div class="select select--compact select--priority">
+                        <select aria-label="Priorita hlásenia #131">
+                          <option value="">Nastaviť</option>
+                          <option value="nizka" selected>Nízka</option>
+                          <option value="stredna">Stredná</option>
+                          <option value="vysoka">Vysoká</option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="reports__id">#128</td>
+                    <td class="reports__title">
+                      <a class="report-link" href="#">Tutoriál je príliš dlhý</a>
+                      <div class="report-meta">
+                        <span>tomas_b · <time datetime="2026-10-09">9. 10.</time></span>
+                        <span class="meta-count"><span class="icon icon--comment" aria-hidden="true"></span><span class="visually-hidden">Komentáre:</span>5</span>
+                      </div>
+                    </td>
+                    <td class="reports__type">Iné</td>
+                    <td class="reports__severity"><span class="severity severity--low">Nízka</span></td>
+                    <td class="reports__build" data-label="Build"><span class="reports__version">0.3.2</span> <span class="reports__platform">Windows</span></td>
+                    <td class="reports__votes" data-label="Potvrdenia">+4</td>
+                    <td class="reports__status" data-label="Stav">
+                      <div class="select select--compact select--status">
+                        <select aria-label="Stav hlásenia #128">
+                          <option value="nove">Nové</option>
+                          <option value="potvrdene">Potvrdené</option>
+                          <option value="riesi-sa">Rieši sa</option>
+                          <option value="opravene">Opravené</option>
+                          <option value="zamietnute" selected>Zamietnuté</option>
+                        </select>
+                      </div>
+                    </td>
+                    <td class="reports__priority" data-label="Priorita">
+                      <div class="select select--compact select--priority">
+                        <select aria-label="Priorita hlásenia #128">
+                          <option value="" selected>Nastaviť</option>
+                          <option value="nizka">Nízka</option>
+                          <option value="stredna">Stredná</option>
+                          <option value="vysoka">Vysoká</option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="reports__id">#126</td>
+                    <td class="reports__title">
+                      <a class="report-link" href="#">Tiene postáv blikajú na grafikách Intel</a>
+                      <div class="report-meta">
+                        <ul class="tags" aria-label="Tagy">
+                          <li class="tag">Grafika</li>
+                        </ul>
+                        <span>kubo · <time datetime="2026-10-08">8. 10.</time></span>
+                        <span class="meta-count"><span class="icon icon--comment" aria-hidden="true"></span><span class="visually-hidden">Komentáre:</span>2</span>
+                        <span class="meta-count"><span class="icon icon--clip" aria-hidden="true"></span><span class="visually-hidden">Prílohy:</span>2</span>
+                      </div>
+                    </td>
+                    <td class="reports__type">Chyba</td>
+                    <td class="reports__severity"><span class="severity severity--medium">Stredná</span></td>
+                    <td class="reports__build" data-label="Build"><span class="reports__version">0.3.2</span> <span class="reports__platform">Windows</span></td>
+                    <td class="reports__votes" data-label="Potvrdenia">+1</td>
+                    <td class="reports__status" data-label="Stav">
+                      <div class="select select--compact select--status">
+                        <select aria-label="Stav hlásenia #126">
+                          <option value="nove">Nové</option>
+                          <option value="potvrdene">Potvrdené</option>
+                          <option value="riesi-sa">Rieši sa</option>
+                          <option value="opravene" selected>Opravené</option>
+                          <option value="zamietnute">Zamietnuté</option>
+                        </select>
+                      </div>
+                    </td>
+                    <td class="reports__priority" data-label="Priorita">
+                      <div class="select select--compact select--priority">
+                        <select aria-label="Priorita hlásenia #126">
+                          <option value="">Nastaviť</option>
+                          <option value="nizka">Nízka</option>
+                          <option value="stredna" selected>Stredná</option>
+                          <option value="vysoka">Vysoká</option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Stránkovanie -->
+            <nav class="pagination" aria-label="Stránkovanie hlásení">
+              <p class="pagination__info">Strana 1 z 6</p>
+              <ul class="pagination__list">
+                <li>
+                  <span class="page-btn page-btn--disabled" aria-disabled="true">
+                    <span aria-hidden="true">‹</span><span class="page-btn__text">Predchádzajúca</span>
+                  </span>
+                </li>
+                <li><a class="page-btn" href="hlasenia.html" aria-current="page">1</a></li>
+                <li><a class="page-btn" href="#">2</a></li>
+                <li><a class="page-btn" href="#">3</a></li>
+                <li><span class="pagination__ellipsis" aria-hidden="true">…</span></li>
+                <li><a class="page-btn" href="#">6</a></li>
+                <li>
+                  <a class="page-btn" href="#" rel="next">
+                    <span class="page-btn__text">Ďalšia</span><span aria-hidden="true">›</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Päta -->
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <p>© 2026 PlaytestHub</p>
+      <p>Semestrálny projekt · 5ZYI31</p>
+    </div>
+  </footer>
+</body>
+</html>
