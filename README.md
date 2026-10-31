@@ -169,3 +169,43 @@ Aplikácia bude mať 14 stránok, z toho 13 s dynamickým obsahom.
 - Moderovanie obsahu administrátorom.
 - Stránkovanie zoznamov (AJAX).
 - Štýly v Sass a vlastné riešenie responzívneho layoutu.
+
+## Spustenie
+
+Aplikácia je postavená na MVC frameworku [Vaííčko](https://github.com/thevajko/vaiicko). Databázu zatiaľ nepoužíva.
+
+### Docker (odporúčané)
+
+Požiadavky: [Docker Desktop](https://www.docker.com/products/docker-desktop/) (alebo Docker Engine s Docker Compose) a voľné porty 80, 3306 a 8080.
+
+V koreňovom priečinku repozitára spustite:
+
+```sh
+cd docker
+docker compose up -d
+```
+
+Aplikácia je dostupná na adrese [http://localhost/](http://localhost/). Webový server má koreňový priečinok (document root) nastavený na `public/`.
+
+Zastavenie: `docker compose stop`, opätovné spustenie: `docker compose start`.
+
+### Bez Dockeru
+
+Stačí PHP 8.0 alebo novšie (odporúčané 8.3+). V koreňovom priečinku repozitára spustite vstavaný webový server PHP s koreňom v priečinku `public/`:
+
+```sh
+php -S localhost:8000 -t public
+```
+
+Aplikácia je potom dostupná na adrese [http://localhost:8000/](http://localhost:8000/). Pri inom webovom serveri (napr. XAMPP) nastavte document root na priečinok `public/`.
+
+### Stránky
+
+| Stránka | Adresa | Kontrolér a akcia | Pohľad |
+| --- | --- | --- | --- |
+| Úvodná stránka (prehľad projektu) | `/` | `HomeController::index` | `App/Views/Home/index.view.php` |
+| Hlásenia projektu | `/?c=report` | `ReportController::index` | `App/Views/Report/index.view.php` |
+
+Obe stránky používajú spoločné rozloženie `App/Views/Layouts/root.layout.view.php` (hlavička, hlavné menu, päta) a spoločné menu projektu `App/Views/_Shared/projectMenu.php`. Medzi stránkami sa prechádza cez menu projektu (Prehľad, Hlásenia), logo a položka „Moje projekty“ vedú na úvodnú stránku.
+
+Pôvodná statická verzia z úlohy 4 je v priečinku `html/` a otvára sa priamo v prehliadači (`html/index.html`, `html/hlasenia.html`).

@@ -1,0 +1,697 @@
+/* =========================================================
+   PlaytestHub – stránka Hlásenia projektu
+   Filtre, tabuľka hlásení a stránkovanie.
+   Na tablete a mobile sa riadky tabuľky menia na karty.
+   ========================================================= */
+
+/* ---------- Filter podľa stavu ---------- */
+.status-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+  margin: 0 0 16px;
+  padding: 0;
+  border: 0;
+}
+
+.status-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--c-border-mid);
+  border-radius: 999px;
+  background: var(--c-surface);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* prepínač je neviditeľný, ale klikateľný a dostupný z klávesnice */
+.status-tab input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.status-tab .icon {
+  width: 15px;
+  height: 15px;
+}
+
+.status-tab__count {
+  color: var(--c-muted);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.status-tab:hover {
+  border-color: var(--c-text);
+}
+
+.status-tab:has(input:checked) {
+  border-color: var(--c-primary);
+  background: var(--c-primary);
+  color: var(--c-on-primary);
+}
+
+.status-tab:has(input:checked) .status-tab__count {
+  color: inherit;
+}
+
+.status-tab:has(input:focus-visible) {
+  outline: 2px solid var(--c-focus);
+  outline-offset: 2px;
+}
+
+/* ---------- Panel filtrov ---------- */
+.filter-panel {
+  padding: 20px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  background: var(--c-surface);
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  margin-top: 16px;
+}
+
+.filter-tags__label {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.chips {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--c-border-mid);
+  border-radius: 999px;
+  background: var(--c-surface);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.chip input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.chip::before {
+  content: "";
+  display: none;
+  width: 14px;
+  height: 14px;
+  background-color: currentColor;
+  -webkit-mask: var(--i-check) center / contain no-repeat;
+  mask: var(--i-check) center / contain no-repeat;
+}
+
+.chip:hover {
+  border-color: var(--c-text);
+}
+
+.chip:has(input:checked) {
+  border-color: var(--c-primary);
+  background: var(--c-primary);
+  color: var(--c-on-primary);
+}
+
+.chip:has(input:checked)::before {
+  display: block;
+}
+
+.chip:has(input:focus-visible) {
+  outline: 2px solid var(--c-focus);
+  outline-offset: 2px;
+}
+
+.filter-reset {
+  margin-left: auto;
+  padding: 8px 4px;
+  border: 0;
+  background: none;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.filter-reset:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* ---------- Súhrn výsledkov a zoradenie ---------- */
+.results-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin: 24px 0 16px;
+}
+
+.results-bar__count {
+  color: var(--c-muted);
+}
+
+.results-bar__count strong {
+  color: var(--c-text);
+}
+
+.sort {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sort__label {
+  color: var(--c-muted);
+  font-size: 0.9375rem;
+  white-space: nowrap;
+}
+
+.sort .select select {
+  min-height: 44px;
+}
+
+/* ---------- Tabuľka hlásení ---------- */
+.table-card {
+  overflow: hidden;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  background: var(--c-surface);
+}
+
+.reports {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.reports th {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--c-border);
+  background: var(--c-surface-alt);
+  color: var(--c-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.reports td {
+  padding: 14px 10px;
+  border-bottom: 1px solid var(--c-border);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.reports th:first-child,
+.reports td:first-child {
+  padding-left: 16px;
+}
+
+.reports th:last-child,
+.reports td:last-child {
+  padding-right: 16px;
+}
+
+.reports tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.reports tbody tr:hover {
+  background: var(--c-surface-alt);
+}
+
+/* stĺpec s názvom zaberie všetko voľné miesto, ostatné len toľko, koľko potrebujú */
+.reports .reports__title {
+  width: 100%;
+  white-space: normal;
+}
+
+.reports__id {
+  color: var(--c-muted);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
+.report-link {
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.report-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.report-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  margin-top: 6px;
+  color: var(--c-muted);
+  font-size: 0.8125rem;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  padding: 0 9px;
+  border: 1px solid var(--c-border-mid);
+  border-radius: 999px;
+  color: var(--c-text);
+  line-height: 1.6;
+}
+
+.meta-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.meta-count .icon {
+  width: 14px;
+  height: 14px;
+}
+
+.reports__version {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
+.reports__platform {
+  display: block;
+  color: var(--c-muted);
+  font-size: 0.8125rem;
+}
+
+.reports__votes {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
+.reports__votes.is-zero {
+  color: var(--c-subtle);
+}
+
+/* závažnosť – od najvýraznejšej po najmenej výraznú */
+.severity {
+  display: inline-block;
+  padding: 2px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.severity--critical {
+  background: var(--c-primary);
+  color: var(--c-on-primary);
+}
+
+.severity--high {
+  padding: 1px 9px;
+  border: 2px solid var(--c-text);
+}
+
+.severity--medium {
+  border-color: var(--c-border-strong);
+}
+
+.severity--low {
+  background: var(--c-fill);
+  color: var(--c-muted);
+}
+
+/* ---------- Výber stavu a priority priamo v tabuľke ---------- */
+.select--compact select {
+  min-height: 40px;
+  padding-right: 32px;
+  padding-left: 34px;
+  font-size: 0.9375rem;
+}
+
+.select--compact::after {
+  right: 10px;
+  width: 14px;
+  height: 14px;
+}
+
+.select--status::before,
+.select--priority::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* ikona stavu sa mení podľa vybranej možnosti (bez JavaScriptu, cez :has) */
+.select--status {
+  --icon: var(--i-new);
+  width: 148px;
+}
+
+.select--status::before {
+  width: 15px;
+  height: 15px;
+  background-color: currentColor;
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+}
+
+.select--status:has(option[value="potvrdene"]:checked) { --icon: var(--i-confirmed); }
+.select--status:has(option[value="riesi-sa"]:checked) { --icon: var(--i-progress); }
+.select--status:has(option[value="opravene"]:checked) { --icon: var(--i-fixed); }
+.select--status:has(option[value="zamietnute"]:checked) { --icon: var(--i-rejected); }
+
+/* priorita – tri stĺpčeky, vyplnené podľa úrovne */
+.select--priority {
+  --bar-off: var(--c-border-mid);
+  --bar-1: var(--bar-off);
+  --bar-2: var(--bar-off);
+  --bar-3: var(--bar-off);
+  width: 132px;
+}
+
+.select--priority::before {
+  width: 13px;
+  height: 12px;
+  background:
+    linear-gradient(var(--bar-1), var(--bar-1)) left bottom / 3px 45% no-repeat,
+    linear-gradient(var(--bar-2), var(--bar-2)) center bottom / 3px 72% no-repeat,
+    linear-gradient(var(--bar-3), var(--bar-3)) right bottom / 3px 100% no-repeat;
+}
+
+.select--priority:has(option[value="nizka"]:checked) {
+  --bar-1: var(--c-text);
+}
+
+.select--priority:has(option[value="stredna"]:checked) {
+  --bar-1: var(--c-text);
+  --bar-2: var(--c-text);
+}
+
+.select--priority:has(option[value="vysoka"]:checked) {
+  --bar-1: var(--c-text);
+  --bar-2: var(--c-text);
+  --bar-3: var(--c-text);
+}
+
+/* nenastavená priorita má prerušovaný okraj ako vo wireframe */
+.select--priority:has(option[value=""]:checked) select {
+  border-style: dashed;
+  color: var(--c-muted);
+}
+
+/* ---------- Stránkovanie ---------- */
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin-top: 24px;
+}
+
+.pagination__info {
+  color: var(--c-muted);
+  font-size: 0.9375rem;
+}
+
+.pagination__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.page-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--c-border-mid);
+  border-radius: var(--radius);
+  background: var(--c-surface);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+a.page-btn:hover {
+  border-color: var(--c-text);
+}
+
+.page-btn[aria-current="page"] {
+  border-color: var(--c-primary);
+  background: var(--c-primary);
+  color: var(--c-on-primary);
+  font-weight: 600;
+}
+
+.page-btn--disabled {
+  color: var(--c-subtle);
+  cursor: not-allowed;
+}
+
+.pagination__ellipsis {
+  padding: 0 2px;
+  color: var(--c-muted);
+}
+
+/* =========================================================
+   Responzivita
+   ========================================================= */
+
+/* Tablet: filtre v troch stĺpcoch, riadky tabuľky ako karty */
+@media (max-width: 959px) {
+  .filter-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .filter-grid .field--search {
+    grid-column: 1 / -1;
+  }
+
+  .table-card {
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: none;
+  }
+
+  .reports {
+    display: block;
+  }
+
+  /* hlavička tabuľky ostáva pre čítačky obrazovky */
+  .reports thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .reports tbody {
+    display: grid;
+    gap: 12px;
+  }
+
+  /* bunky sa na karte preusporiadajú cez order:
+     ID · typ · závažnosť / názov / build · potvrdenia / stav · priorita */
+  .reports tr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-lg);
+    background: var(--c-surface);
+  }
+
+  .reports tbody tr:hover {
+    background: var(--c-surface);
+  }
+
+  .reports td,
+  .reports td:first-child,
+  .reports td:last-child {
+    display: block;
+    padding: 0;
+    border: 0;
+  }
+
+  .reports__id { order: 1; }
+  .reports__type { order: 2; }
+  .reports__severity { order: 3; margin-left: auto; }
+  .reports__build { order: 5; flex: 1 1 calc(50% - 6px); }
+  .reports__votes { order: 6; }
+  .reports__status { order: 7; flex: 1 1 calc(50% - 6px); }
+  .reports__priority { order: 8; flex: 1 1 calc(50% - 6px); }
+
+  .reports .reports__title {
+    order: 4;
+    flex: 1 1 100%;
+    width: auto;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--c-border);
+  }
+
+  .reports__version,
+  .reports__platform {
+    display: inline;
+  }
+
+  .reports__version {
+    margin-right: 6px;
+  }
+
+  /* popisky stĺpcov, ktoré na karte chýbajú, sa doplnia z data-label */
+  .reports__build::before,
+  .reports__votes::before {
+    content: attr(data-label);
+    margin-right: 8px;
+    color: var(--c-muted);
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+  }
+
+  .reports__status::before,
+  .reports__priority::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 4px;
+    color: var(--c-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .select--status,
+  .select--priority {
+    width: 100%;
+  }
+}
+
+/* Mobil */
+@media (max-width: 599px) {
+  .status-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .status-tab {
+    padding: 0 12px;
+  }
+
+  .filter-panel {
+    padding: 16px;
+  }
+
+  .filter-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .filter-tags {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .filter-reset {
+    margin-left: 0;
+    padding-left: 0;
+  }
+
+  .results-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .sort .select {
+    flex: 1;
+  }
+
+  .pagination {
+    flex-direction: column;
+  }
+
+  .pagination__list {
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .page-btn {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 10px;
+  }
+
+  /* text „Predchádzajúca/Ďalšia“ ostáva len pre čítačky, viditeľná je šípka */
+  .page-btn__text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* Veľmi úzke displeje: stav a priorita pod sebou */
+@media (max-width: 359px) {
+  .reports__status,
+  .reports__priority {
+    flex-basis: 100%;
+  }
+}

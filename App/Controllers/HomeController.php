@@ -10,8 +10,8 @@ use Framework\Http\Responses\Response;
  * Class HomeController
  * Handles actions related to the home page and other public actions.
  *
- * This controller includes actions that are accessible to all users, including a default landing page and a contact
- * page. It provides a mechanism for authorizing actions based on user permissions.
+ * This controller includes actions that are accessible to all users, currently the landing page (project overview).
+ * It provides a mechanism for authorizing actions based on user permissions.
  *
  * @package App\Controllers
  */
@@ -38,19 +38,6 @@ class HomeController extends BaseController
      * @return Response The response object containing the rendered HTML for the home page.
      */
     public function index(Request $request): Response
-    {
-        return $this->html();
-    }
-
-    /**
-     * Displays the contact page.
-     *
-     * This action serves the HTML view for the contact page, which is accessible to all users without any
-     * authorization.
-     *
-     * @return Response The response object containing the rendered HTML for the contact page.
-     */
-    public function contact(Request $request): Response
     {
         return $this->html();
     }

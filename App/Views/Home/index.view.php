@@ -1,39 +1,61 @@
-<?php
+<?php /** @var \Framework\Support\LinkGenerator $link */ ?>
 
-/** @var \Framework\Support\LinkGenerator $link */
-?>
+<!-- Hlavička stránky: omrvinky, nadpis, akcie -->
+<header class="page-header">
+  <nav class="breadcrumbs" aria-label="Omrvinky">
+    <ol class="breadcrumbs__list">
+      <li><a href="#">Moje projekty</a></li>
+      <li><a href="<?= $link->url('home.index') ?>">Lantern Woods</a></li>
+      <li aria-current="page">Prehľad</li>
+    </ol>
+  </nav>
+  <div class="page-header__row">
+    <div>
+      <h1 class="page-header__title">Prehľad</h1>
+      <p class="page-header__lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    </div>
+    <div class="page-header__actions">
+      <a class="btn" href="#">Upraviť projekt</a>
+      <a class="btn btn--primary" href="#">Pridať build</a>
+    </div>
+  </div>
+</header>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col mt-5">
-            <div class="text-center">
-                <h2>Vaííčko MVC FW</h2>
-                <h3>Version <?= App\Configuration::FW_VERSION ?></h3>
-                <img src="<?= $link->asset('images/vaiicko_logo.png') ?>" alt="Framework Logo">
-                <p>
-                    Congratulations, you have successfully installed and run the framework
-                    <strong>Vaííčko</strong> <?= App\Configuration::FW_VERSION ?>!<br>
-                    We hope that you will create a great application using this framework.<br>
-                </p>
-                <p>
-                    This simple framework was created for teaching purposes and to better understand how the MVC
-                    architecture works.<br>
-                    It is intended for students of the subject <em>web application development</em>, but not only
-                    for them.
-                </p>
-            </div>
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col text-center">
-            <h4>Authors</h4>
-            <div>
-                <a href="mailto:Patrik.Hrkut@fri.uniza.sk">doc. Ing. Patrik Hrkút, PhD.</a><br>
-                <a href="mailto:Michal.Duracik@fri.uniza.sk">Ing. Michal Ďuračík, PhD.</a><br>
-                <a href="mailto:Matej.Mesko@fri.uniza.sk">Ing. Matej Meško, PhD.</a><br><br>
-                &copy; 2020-<?= date('Y') ?> University of Žilina, Faculty of Management Science and Informatics,
-                Department of Software Technologies
-            </div>
-        </div>
-    </div>
+<div class="project-layout">
+  <!-- Menu projektu – zobrazuje sa len na stránkach konkrétneho projektu -->
+  <?php $activeItem = 'Main'; require __DIR__ . '/../_Shared/projectMenu.php' ?>
+
+  <!-- Obsah stránky – zástupný obsah -->
+  <div class="project-content">
+    <section class="placeholder" aria-labelledby="placeholder-title">
+      <div class="placeholder__label">
+        <h2 class="placeholder__title" id="placeholder-title">Obsah stránky</h2>
+        <p>Katalóg, tabuľka, formulár alebo detail – podľa aktuálnej stránky.</p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="blocks-title">
+      <h2 class="section__title" id="blocks-title">Ukážkové bloky obsahu</h2>
+      <div class="card-grid">
+        <article class="card">
+          <h3 class="card__title">Posledný build</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus.</p>
+        </article>
+        <article class="card">
+          <h3 class="card__title">Nové hlásenia</h3>
+          <p>Curabitur blandit tempus porttitor. Donec ullamcorper nulla non metus auctor fringilla.</p>
+        </article>
+        <article class="card">
+          <h3 class="card__title">Aktívni testeri</h3>
+          <p>Maecenas faucibus mollis interdum. Vestibulum id ligula porta felis euismod semper.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section card" aria-labelledby="about-title">
+      <h2 class="section__title" id="about-title">O projekte</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </section>
+  </div>
 </div>

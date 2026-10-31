@@ -7,52 +7,71 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="PlaytestHub – platforma na testovanie hier pred vydaním.">
     <title><?= App\Configuration::APP_NAME ?></title>
-    <!-- Favicons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="<?= $link->asset('favicons/apple-touch-icon.png') ?>">
-    <link rel="icon" type="image/png" sizes="32x32" href="<?= $link->asset('favicons/favicon-32x32.png') ?>">
-    <link rel="icon" type="image/png" sizes="16x16" href="<?= $link->asset('favicons/favicon-16x16.png') ?>">
-    <link rel="manifest" href="<?= $link->asset('favicons/site.webmanifest') ?>">
-    <link rel="shortcut icon" href="<?= $link->asset('favicons/favicon.ico') ?>">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-            crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="<?= $link->asset('css/styl.css') ?>">
-    <script src="<?= $link->asset('js/script.js') ?>"></script>
+    <link rel="icon" href="<?= $link->asset('images/logo.svg') ?>" type="image/svg+xml">
+    <link rel="stylesheet" href="<?= $link->asset('css/main.css') ?>">
+    <link rel="stylesheet" href="<?= $link->asset('css/hlasenia.css') ?>">
 </head>
 <body>
-<nav class="navbar navbar-expand-sm bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="<?= $link->url('home.index') ?>">
-            <img src="<?= $link->asset('images/vaiicko_logo.png') ?>" title="<?= App\Configuration::APP_NAME ?>" alt="Framework Logo">
+<a class="skip-link" href="#obsah">Preskočiť na obsah</a>
+
+<!-- Hlavička: logo, názov, hlavné menu, účet -->
+<header class="site-header">
+    <div class="container site-header__inner">
+        <a class="brand" href="<?= $link->url('home.index') ?>">
+            <img class="brand__logo" src="<?= $link->asset('images/logo.svg') ?>" alt="" width="36" height="36">
+            <span class="brand__name">PlaytestHub</span>
         </a>
-        <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="<?= $link->url('home.contact') ?>">Contact</a>
-            </li>
-        </ul>
-        <?php if ($user->isLoggedIn()) { ?>
-            <span class="navbar-text">Logged in user: <b><?= e($user->getName()) ?></b></span>
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= $link->url('auth.logout') ?>">Log out</a>
-                </li>
+
+        <!-- Na menších obrazovkách sa menu otvára cez checkbox (bez JavaScriptu) -->
+        <input class="nav-toggle visually-hidden" type="checkbox" id="nav-toggle">
+        <label class="nav-toggle__button" for="nav-toggle">
+            <span class="icon icon--menu" aria-hidden="true"></span>
+            <span class="visually-hidden">Zobraziť menu</span>
+        </label>
+
+        <nav class="main-nav" aria-label="Hlavné menu">
+            <ul class="main-nav__list">
+                <li><a class="main-nav__link" href="#">Katalóg</a></li>
+                <li><a class="main-nav__link" href="#">Môj prehľad</a></li>
+                <li><a class="main-nav__link" href="<?= $link->url('home.index') ?>" aria-current="true">Moje projekty</a></li>
             </ul>
-        <?php } else { ?>
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= App\Configuration::LOGIN_URL ?>">Log in</a>
-                </li>
+        </nav>
+
+        <details class="account">
+            <summary class="account__summary">
+                <span class="avatar" aria-hidden="true">ŠK</span>
+                <span class="account__text">
+                    <span class="account__name">Šimon K.</span>
+                    <span class="account__role">Vývojár</span>
+                </span>
+                <span class="visually-hidden">Menu účtu</span>
+                <span class="icon icon--chevron account__chevron" aria-hidden="true"></span>
+            </summary>
+            <ul class="account__menu">
+                <li><a href="#">Môj profil</a></li>
+                <li><a href="#">Nastavenia účtu</a></li>
+                <li class="account__menu-sep"><a href="#">Odhlásiť sa</a></li>
             </ul>
-        <?php } ?>
+        </details>
     </div>
-</nav>
-<div class="container-fluid mt-3">
-    <div class="web-content">
+</header>
+
+<main class="page" id="obsah">
+    <div class="container">
         <?= $contentHTML ?>
     </div>
-</div>
+</main>
+
+<!-- Päta -->
+<footer class="site-footer">
+    <div class="container site-footer__inner">
+        <p>© 2026 PlaytestHub</p>
+        <p>Semestrálny projekt · 5ZYI31</p>
+    </div>
+</footer>
 </body>
 </html>
