@@ -405,10 +405,10 @@
   mask: var(--icon) center / contain no-repeat;
 }
 
-.select--status:has(option[value="potvrdene"]:checked) { --icon: var(--i-confirmed); }
-.select--status:has(option[value="riesi-sa"]:checked) { --icon: var(--i-progress); }
-.select--status:has(option[value="opravene"]:checked) { --icon: var(--i-fixed); }
-.select--status:has(option[value="zamietnute"]:checked) { --icon: var(--i-rejected); }
+.select--status:has(option[value="confirmed"]:checked) { --icon: var(--i-confirmed); }
+.select--status:has(option[value="in_progress"]:checked) { --icon: var(--i-progress); }
+.select--status:has(option[value="fixed"]:checked) { --icon: var(--i-fixed); }
+.select--status:has(option[value="rejected"]:checked) { --icon: var(--i-rejected); }
 
 /* priorita – tri stĺpčeky, vyplnené podľa úrovne */
 .select--priority {
@@ -428,16 +428,16 @@
     linear-gradient(var(--bar-3), var(--bar-3)) right bottom / 3px 100% no-repeat;
 }
 
-.select--priority:has(option[value="nizka"]:checked) {
+.select--priority:has(option[value="low"]:checked) {
   --bar-1: var(--c-text);
 }
 
-.select--priority:has(option[value="stredna"]:checked) {
+.select--priority:has(option[value="medium"]:checked) {
   --bar-1: var(--c-text);
   --bar-2: var(--c-text);
 }
 
-.select--priority:has(option[value="vysoka"]:checked) {
+.select--priority:has(option[value="high"]:checked) {
   --bar-1: var(--c-text);
   --bar-2: var(--c-text);
   --bar-3: var(--c-text);
@@ -579,6 +579,7 @@ a.page-btn:hover {
   .reports__votes { order: 6; }
   .reports__status { order: 7; flex: 1 1 calc(50% - 6px); }
   .reports__priority { order: 8; flex: 1 1 calc(50% - 6px); }
+  .reports__actions { order: 9; flex: 1 1 100%; }
 
   .reports .reports__title {
     order: 4;
@@ -694,4 +695,92 @@ a.page-btn:hover {
   .reports__priority {
     flex-basis: 100%;
   }
+}
+
+/* ---------- Report form (create / edit) ---------- */
+.report-form {
+  display: grid;
+  gap: 20px;
+}
+
+.report-form__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+textarea.input {
+  min-height: 180px;
+  padding: 12px 14px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.field__hint {
+  margin-top: 6px;
+  color: var(--c-muted);
+  font-size: 0.8125rem;
+}
+
+.report-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.form-errors {
+  padding: 14px 18px;
+  border: 1px solid var(--c-danger);
+  border-radius: var(--radius);
+  background: var(--c-danger-bg);
+  color: var(--c-danger);
+}
+
+/* two classes, so it wins over `.card p { color: muted }` from main.css */
+.form-errors .form-errors__title {
+  color: inherit;
+  font-weight: 600;
+}
+
+.form-errors__list {
+  margin-top: 6px;
+  padding-left: 20px;
+  list-style: disc;
+}
+
+@media (max-width: 959px) {
+  .report-form__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 599px) {
+  .report-form__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .report-form__actions .btn {
+    flex: 1 1 100%;
+  }
+}
+
+/* ---------- Edit / Delete buttons in the report list ---------- */
+.btn--small {
+  min-height: 36px;
+  padding: 0 14px;
+  font-size: 0.875rem;
+}
+
+.btn--danger {
+  border-color: var(--c-danger);
+  color: var(--c-danger);
+}
+
+.btn--danger:hover {
+  background: var(--c-danger-bg);
+}
+
+.row-actions {
+  display: flex;
+  gap: 8px;
 }

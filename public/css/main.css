@@ -25,6 +25,8 @@
   --c-primary-hover: #3b3b3b;
   --c-on-primary: #fff;
   --c-focus: #2f6fdf;
+  --c-danger: #b42318;
+  --c-danger-bg: #fdeceb;
 
   --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;

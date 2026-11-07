@@ -1,81 +1,85 @@
-<?php /** @var \Framework\Support\LinkGenerator $link */ ?>
+<?php
+/** @var \Framework\Support\LinkGenerator $link */
+/** @var \App\Models\Report[] $reports */
+?>
 
-<!-- Hlavička stránky: omrvinky, nadpis, akcie -->
+<!-- Page header: breadcrumbs, title, actions -->
 <header class="page-header">
-  <nav class="breadcrumbs" aria-label="Omrvinky">
+  <nav class="breadcrumbs" aria-label="Breadcrumbs">
     <ol class="breadcrumbs__list">
-      <li><a href="#">Moje projekty</a></li>
+      <li><a href="#">My projects</a></li>
       <li><a href="<?= $link->url('home.index') ?>">Lantern Woods</a></li>
-      <li aria-current="page">Hlásenia</li>
+      <li aria-current="page">Reports</li>
     </ol>
   </nav>
   <div class="page-header__row">
     <div>
-      <h1 class="page-header__title">Hlásenia</h1>
-      <p class="page-header__lead">Chyby a spätná väzba testerov ku všetkým buildom projektu</p>
+      <h1 class="page-header__title">Reports</h1>
+      <p class="page-header__lead">Bugs and feedback from testers across all builds of the project</p>
     </div>
     <div class="page-header__actions">
-      <a class="btn" href="#">Spravovať tagy</a>
+      <a class="btn" href="#">Manage tags</a>
+      <a class="btn btn--primary" href="<?= $link->url('report.add') ?>">New report</a>
     </div>
   </div>
 </header>
 
 <div class="project-layout">
-  <!-- Menu projektu -->
+  <!-- Project menu -->
   <?php $activeItem = 'Report'; require __DIR__ . '/../_Shared/projectMenu.php' ?>
 
   <div class="project-content">
-    <!-- Filtre -->
-    <form class="report-filters" id="filters" action="<?= $link->url('report.index') ?>" method="get" role="search" aria-label="Filtrovanie hlásení">
-      <!-- GET formulár zahodí ?c=report z action, preto kontrolér posielame ako skryté pole -->
+    <!-- Filters -->
+    <form class="report-filters" id="filters" action="<?= $link->url('report.index') ?>" method="get" role="search" aria-label="Filter reports">
+      <!-- A GET form drops ?c=report from its action, so the controller is sent as a hidden field -->
       <input type="hidden" name="c" value="report">
       <fieldset class="status-tabs">
-        <legend class="visually-hidden">Stav hlásenia</legend>
+        <legend class="visually-hidden">Report status</legend>
         <label class="status-tab">
-          <input type="radio" name="stav" value="" checked>
-          Všetky <span class="status-tab__count">42</span>
+          <input type="radio" name="status" value="" checked>
+          All
         </label>
         <label class="status-tab">
-          <input type="radio" name="stav" value="nove">
+          <input type="radio" name="status" value="new">
           <span class="icon icon--new" aria-hidden="true"></span>
-          Nové <span class="status-tab__count">12</span>
+          New
         </label>
         <label class="status-tab">
-          <input type="radio" name="stav" value="potvrdene">
+          <input type="radio" name="status" value="confirmed">
           <span class="icon icon--confirmed" aria-hidden="true"></span>
-          Potvrdené <span class="status-tab__count">5</span>
+          Confirmed
         </label>
         <label class="status-tab">
-          <input type="radio" name="stav" value="riesi-sa">
+          <input type="radio" name="status" value="in_progress">
           <span class="icon icon--progress" aria-hidden="true"></span>
-          Rieši sa <span class="status-tab__count">4</span>
+          In progress
         </label>
         <label class="status-tab">
-          <input type="radio" name="stav" value="opravene">
+          <input type="radio" name="status" value="fixed">
           <span class="icon icon--fixed" aria-hidden="true"></span>
-          Opravené <span class="status-tab__count">18</span>
+          Fixed
         </label>
         <label class="status-tab">
-          <input type="radio" name="stav" value="zamietnute">
+          <input type="radio" name="status" value="rejected">
           <span class="icon icon--rejected" aria-hidden="true"></span>
-          Zamietnuté <span class="status-tab__count">3</span>
+          Rejected
         </label>
       </fieldset>
 
       <div class="filter-panel">
         <div class="filter-grid">
           <div class="field field--search">
-            <label class="field__label" for="filter-q">Hľadať v názve</label>
+            <label class="field__label" for="filter-q">Search in title</label>
             <div class="input-icon">
               <span class="icon icon--search" aria-hidden="true"></span>
-              <input class="input" type="search" id="filter-q" name="q" placeholder="napr. pád, rebrík, zvuk…">
+              <input class="input" type="search" id="filter-q" name="q" placeholder="e.g. crash, ladder, sound…">
             </div>
           </div>
           <div class="field">
             <label class="field__label" for="filter-build">Build</label>
             <div class="select">
               <select id="filter-build" name="build">
-                <option value="">Všetky buildy</option>
+                <option value="">All builds</option>
                 <option value="0.4.1">0.4.1</option>
                 <option value="0.4.0">0.4.0</option>
                 <option value="0.3.2">0.3.2</option>
@@ -84,63 +88,63 @@
             </div>
           </div>
           <div class="field">
-            <label class="field__label" for="filter-type">Typ</label>
+            <label class="field__label" for="filter-type">Type</label>
             <div class="select">
-              <select id="filter-type" name="typ">
-                <option value="">Všetky typy</option>
-                <option value="chyba">Chyba</option>
-                <option value="pad">Pád</option>
-                <option value="navrh">Návrh</option>
-                <option value="ine">Iné</option>
+              <select id="filter-type" name="type">
+                <option value="">All types</option>
+                <option value="bug">Bug</option>
+                <option value="crash">Crash</option>
+                <option value="suggestion">Suggestion</option>
+                <option value="other">Other</option>
               </select>
             </div>
           </div>
           <div class="field">
-            <label class="field__label" for="filter-severity">Závažnosť</label>
+            <label class="field__label" for="filter-severity">Severity</label>
             <div class="select">
-              <select id="filter-severity" name="zavaznost">
-                <option value="">Všetky</option>
-                <option value="kriticka">Kritická</option>
-                <option value="vysoka">Vysoká</option>
-                <option value="stredna">Stredná</option>
-                <option value="nizka">Nízka</option>
+              <select id="filter-severity" name="severity">
+                <option value="">All</option>
+                <option value="critical">Critical</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
               </select>
             </div>
           </div>
         </div>
 
         <div class="filter-tags">
-          <span class="filter-tags__label" id="filter-tags-label">Tagy</span>
+          <span class="filter-tags__label" id="filter-tags-label">Tags</span>
           <div class="chips" role="group" aria-labelledby="filter-tags-label">
-            <label class="chip"><input type="checkbox" name="tag" value="grafika">Grafika</label>
-            <label class="chip"><input type="checkbox" name="tag" value="zvuk">Zvuk</label>
-            <label class="chip"><input type="checkbox" name="tag" value="ovladanie">Ovládanie</label>
+            <label class="chip"><input type="checkbox" name="tag" value="graphics">Graphics</label>
+            <label class="chip"><input type="checkbox" name="tag" value="sound">Sound</label>
+            <label class="chip"><input type="checkbox" name="tag" value="controls">Controls</label>
             <label class="chip"><input type="checkbox" name="tag" value="ui">UI</label>
-            <label class="chip"><input type="checkbox" name="tag" value="vykon">Výkon</label>
-            <label class="chip"><input type="checkbox" name="tag" value="ukladanie">Ukladanie</label>
+            <label class="chip"><input type="checkbox" name="tag" value="performance">Performance</label>
+            <label class="chip"><input type="checkbox" name="tag" value="saving">Saving</label>
           </div>
-          <button class="filter-reset" type="reset">Zrušiť filtre</button>
+          <button class="filter-reset" type="reset">Clear filters</button>
         </div>
 
-        <!-- filtre sa neskôr budú aplikovať cez AJAX; tlačidlo umožní odoslanie klávesou Enter -->
-        <button class="visually-hidden" type="submit">Filtrovať</button>
+        <!-- filters will later be applied via AJAX; the button allows submitting with the Enter key -->
+        <button class="visually-hidden" type="submit">Filter</button>
       </div>
     </form>
 
-    <!-- Zoznam hlásení -->
+    <!-- Report list -->
     <section aria-labelledby="reports-title">
-      <h2 class="visually-hidden" id="reports-title">Zoznam hlásení</h2>
+      <h2 class="visually-hidden" id="reports-title">Report list</h2>
 
       <div class="results-bar">
-        <p class="results-bar__count">Zobrazené <strong>1–8</strong> z 42 hlásení</p>
+        <p class="results-bar__count">Showing <strong><?= count($reports) ?></strong> <?= count($reports) === 1 ? 'report' : 'reports' ?></p>
         <div class="sort">
-          <label class="sort__label" for="sort">Zoradiť podľa</label>
+          <label class="sort__label" for="sort">Sort by</label>
           <div class="select">
-            <select id="sort" name="zoradit" form="filters">
-              <option value="najnovsie">Najnovšie</option>
-              <option value="najstarsie">Najstaršie</option>
-              <option value="zavaznost">Najvyššia závažnosť</option>
-              <option value="potvrdenia">Najviac potvrdení</option>
+            <select id="sort" name="sort" form="filters">
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+              <option value="severity">Highest severity</option>
+              <option value="confirmations">Most confirmations</option>
             </select>
           </div>
         </div>
@@ -148,359 +152,60 @@
 
       <div class="table-card">
         <table class="reports">
-          <caption class="visually-hidden">Hlásenia projektu Lantern Woods, strana 1 z 6</caption>
+          <caption class="visually-hidden">Reports of the Lantern Woods project</caption>
           <thead>
             <tr>
               <th scope="col">ID</th>
-              <th scope="col">Hlásenie</th>
-              <th scope="col">Typ</th>
-              <th scope="col">Závažnosť</th>
+              <th scope="col">Report</th>
+              <th scope="col">Type</th>
+              <th scope="col">Severity</th>
               <th scope="col">Build</th>
-              <th scope="col"><abbr title="Počet potvrdení">+1</abbr></th>
-              <th scope="col">Stav</th>
-              <th scope="col">Priorita</th>
+              <th scope="col"><abbr title="Number of confirmations">+1</abbr></th>
+              <th scope="col">Status</th>
+              <th scope="col">Priority</th>
+              <th scope="col">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td class="reports__id">#142</td>
-              <td class="reports__title">
-                <a class="report-link" href="#">Hra spadne pri načítaní uloženej pozície</a>
-                <div class="report-meta">
-                  <ul class="tags" aria-label="Tagy">
-                    <li class="tag">Ukladanie</li>
-                  </ul>
-                  <span>marek_t · <time datetime="2026-10-20T16:10">pred 2 h</time></span>
-                  <span class="meta-count"><span class="icon icon--comment" aria-hidden="true"></span><span class="visually-hidden">Komentáre:</span>2</span>
-                  <span class="meta-count"><span class="icon icon--clip" aria-hidden="true"></span><span class="visually-hidden">Prílohy:</span>1</span>
-                </div>
-              </td>
-              <td class="reports__type">Pád</td>
-              <td class="reports__severity"><span class="severity severity--critical">Kritická</span></td>
-              <td class="reports__build" data-label="Build"><span class="reports__version">0.4.1</span> <span class="reports__platform">Windows</span></td>
-              <td class="reports__votes" data-label="Potvrdenia">+5</td>
-              <td class="reports__status" data-label="Stav">
-                <div class="select select--compact select--status">
-                  <select aria-label="Stav hlásenia #142">
-                    <option value="nove" selected>Nové</option>
-                    <option value="potvrdene">Potvrdené</option>
-                    <option value="riesi-sa">Rieši sa</option>
-                    <option value="opravene">Opravené</option>
-                    <option value="zamietnute">Zamietnuté</option>
-                  </select>
-                </div>
-              </td>
-              <td class="reports__priority" data-label="Priorita">
-                <div class="select select--compact select--priority">
-                  <select aria-label="Priorita hlásenia #142">
-                    <option value="" selected>Nastaviť</option>
-                    <option value="nizka">Nízka</option>
-                    <option value="stredna">Stredná</option>
-                    <option value="vysoka">Vysoká</option>
-                  </select>
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <td class="reports__id">#141</td>
-              <td class="reports__title">
-                <a class="report-link" href="#">Postava sa zasekne o rebrík v 2. kapitole</a>
-                <div class="report-meta">
-                  <ul class="tags" aria-label="Tagy">
-                    <li class="tag">Ovládanie</li>
-                  </ul>
-                  <span>lucia.h · <time datetime="2026-10-20T13:05">pred 5 h</time></span>
-                  <span class="meta-count"><span class="icon icon--comment" aria-hidden="true"></span><span class="visually-hidden">Komentáre:</span>4</span>
-                  <span class="meta-count"><span class="icon icon--clip" aria-hidden="true"></span><span class="visually-hidden">Prílohy:</span>2</span>
-                </div>
-              </td>
-              <td class="reports__type">Chyba</td>
-              <td class="reports__severity"><span class="severity severity--high">Vysoká</span></td>
-              <td class="reports__build" data-label="Build"><span class="reports__version">0.4.1</span> <span class="reports__platform">Windows</span></td>
-              <td class="reports__votes" data-label="Potvrdenia">+3</td>
-              <td class="reports__status" data-label="Stav">
-                <div class="select select--compact select--status">
-                  <select aria-label="Stav hlásenia #141">
-                    <option value="nove" selected>Nové</option>
-                    <option value="potvrdene">Potvrdené</option>
-                    <option value="riesi-sa">Rieši sa</option>
-                    <option value="opravene">Opravené</option>
-                    <option value="zamietnute">Zamietnuté</option>
-                  </select>
-                </div>
-              </td>
-              <td class="reports__priority" data-label="Priorita">
-                <div class="select select--compact select--priority">
-                  <select aria-label="Priorita hlásenia #141">
-                    <option value="">Nastaviť</option>
-                    <option value="nizka">Nízka</option>
-                    <option value="stredna">Stredná</option>
-                    <option value="vysoka" selected>Vysoká</option>
-                  </select>
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <td class="reports__id">#139</td>
-              <td class="reports__title">
-                <a class="report-link" href="#">Hudba v menu hrá dvakrát cez seba</a>
-                <div class="report-meta">
-                  <ul class="tags" aria-label="Tagy">
-                    <li class="tag">Zvuk</li>
-                  </ul>
-                  <span>kubo · <time datetime="2026-10-19">včera</time></span>
-                </div>
-              </td>
-              <td class="reports__type">Chyba</td>
-              <td class="reports__severity"><span class="severity severity--medium">Stredná</span></td>
-              <td class="reports__build" data-label="Build"><span class="reports__version">0.4.1</span> <span class="reports__platform">macOS</span></td>
-              <td class="reports__votes" data-label="Potvrdenia">+1</td>
-              <td class="reports__status" data-label="Stav">
-                <div class="select select--compact select--status">
-                  <select aria-label="Stav hlásenia #139">
-                    <option value="nove">Nové</option>
-                    <option value="potvrdene" selected>Potvrdené</option>
-                    <option value="riesi-sa">Rieši sa</option>
-                    <option value="opravene">Opravené</option>
-                    <option value="zamietnute">Zamietnuté</option>
-                  </select>
-                </div>
-              </td>
-              <td class="reports__priority" data-label="Priorita">
-                <div class="select select--compact select--priority">
-                  <select aria-label="Priorita hlásenia #139">
-                    <option value="" selected>Nastaviť</option>
-                    <option value="nizka">Nízka</option>
-                    <option value="stredna">Stredná</option>
-                    <option value="vysoka">Vysoká</option>
-                  </select>
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <td class="reports__id">#137</td>
-              <td class="reports__title">
-                <a class="report-link" href="#">Pridať možnosť zmeniť klávesy ovládania</a>
-                <div class="report-meta">
-                  <ul class="tags" aria-label="Tagy">
-                    <li class="tag">Ovládanie</li>
-                    <li class="tag">UI</li>
-                  </ul>
-                  <span>petra_v · <time datetime="2026-10-19">včera</time></span>
-                  <span class="meta-count"><span class="icon icon--comment" aria-hidden="true"></span><span class="visually-hidden">Komentáre:</span>6</span>
-                </div>
-              </td>
-              <td class="reports__type">Návrh</td>
-              <td class="reports__severity"><span class="severity severity--low">Nízka</span></td>
-              <td class="reports__build" data-label="Build"><span class="reports__version">0.4.0</span> <span class="reports__platform">Windows</span></td>
-              <td class="reports__votes" data-label="Potvrdenia">+8</td>
-              <td class="reports__status" data-label="Stav">
-                <div class="select select--compact select--status">
-                  <select aria-label="Stav hlásenia #137">
-                    <option value="nove">Nové</option>
-                    <option value="potvrdene" selected>Potvrdené</option>
-                    <option value="riesi-sa">Rieši sa</option>
-                    <option value="opravene">Opravené</option>
-                    <option value="zamietnute">Zamietnuté</option>
-                  </select>
-                </div>
-              </td>
-              <td class="reports__priority" data-label="Priorita">
-                <div class="select select--compact select--priority">
-                  <select aria-label="Priorita hlásenia #137">
-                    <option value="">Nastaviť</option>
-                    <option value="nizka">Nízka</option>
-                    <option value="stredna" selected>Stredná</option>
-                    <option value="vysoka">Vysoká</option>
-                  </select>
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <td class="reports__id">#135</td>
-              <td class="reports__title">
-                <a class="report-link" href="#">FPS klesá pod 30 v lese počas dažďa</a>
-                <div class="report-meta">
-                  <ul class="tags" aria-label="Tagy">
-                    <li class="tag">Výkon</li>
-                    <li class="tag">Grafika</li>
-                  </ul>
-                  <span>marek_t · <time datetime="2026-10-14">14. 10.</time></span>
-                  <span class="meta-count"><span class="icon icon--comment" aria-hidden="true"></span><span class="visually-hidden">Komentáre:</span>3</span>
-                  <span class="meta-count"><span class="icon icon--clip" aria-hidden="true"></span><span class="visually-hidden">Prílohy:</span>3</span>
-                </div>
-              </td>
-              <td class="reports__type">Chyba</td>
-              <td class="reports__severity"><span class="severity severity--high">Vysoká</span></td>
-              <td class="reports__build" data-label="Build"><span class="reports__version">0.4.0</span> <span class="reports__platform">Windows</span></td>
-              <td class="reports__votes" data-label="Potvrdenia">+2</td>
-              <td class="reports__status" data-label="Stav">
-                <div class="select select--compact select--status">
-                  <select aria-label="Stav hlásenia #135">
-                    <option value="nove">Nové</option>
-                    <option value="potvrdene">Potvrdené</option>
-                    <option value="riesi-sa" selected>Rieši sa</option>
-                    <option value="opravene">Opravené</option>
-                    <option value="zamietnute">Zamietnuté</option>
-                  </select>
-                </div>
-              </td>
-              <td class="reports__priority" data-label="Priorita">
-                <div class="select select--compact select--priority">
-                  <select aria-label="Priorita hlásenia #135">
-                    <option value="">Nastaviť</option>
-                    <option value="nizka">Nízka</option>
-                    <option value="stredna">Stredná</option>
-                    <option value="vysoka" selected>Vysoká</option>
-                  </select>
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <td class="reports__id">#131</td>
-              <td class="reports__title">
-                <a class="report-link" href="#">Text v dialógu presahuje okno</a>
-                <div class="report-meta">
-                  <ul class="tags" aria-label="Tagy">
-                    <li class="tag">UI</li>
-                  </ul>
-                  <span>lucia.h · <time datetime="2026-10-12">12. 10.</time></span>
-                  <span class="meta-count"><span class="icon icon--comment" aria-hidden="true"></span><span class="visually-hidden">Komentáre:</span>1</span>
-                  <span class="meta-count"><span class="icon icon--clip" aria-hidden="true"></span><span class="visually-hidden">Prílohy:</span>1</span>
-                </div>
-              </td>
-              <td class="reports__type">Chyba</td>
-              <td class="reports__severity"><span class="severity severity--low">Nízka</span></td>
-              <td class="reports__build" data-label="Build"><span class="reports__version">0.4.0</span> <span class="reports__platform">macOS</span></td>
-              <td class="reports__votes is-zero" data-label="Potvrdenia">0</td>
-              <td class="reports__status" data-label="Stav">
-                <div class="select select--compact select--status">
-                  <select aria-label="Stav hlásenia #131">
-                    <option value="nove">Nové</option>
-                    <option value="potvrdene">Potvrdené</option>
-                    <option value="riesi-sa">Rieši sa</option>
-                    <option value="opravene" selected>Opravené</option>
-                    <option value="zamietnute">Zamietnuté</option>
-                  </select>
-                </div>
-              </td>
-              <td class="reports__priority" data-label="Priorita">
-                <div class="select select--compact select--priority">
-                  <select aria-label="Priorita hlásenia #131">
-                    <option value="">Nastaviť</option>
-                    <option value="nizka" selected>Nízka</option>
-                    <option value="stredna">Stredná</option>
-                    <option value="vysoka">Vysoká</option>
-                  </select>
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <td class="reports__id">#128</td>
-              <td class="reports__title">
-                <a class="report-link" href="#">Tutoriál je príliš dlhý</a>
-                <div class="report-meta">
-                  <span>tomas_b · <time datetime="2026-10-09">9. 10.</time></span>
-                  <span class="meta-count"><span class="icon icon--comment" aria-hidden="true"></span><span class="visually-hidden">Komentáre:</span>5</span>
-                </div>
-              </td>
-              <td class="reports__type">Iné</td>
-              <td class="reports__severity"><span class="severity severity--low">Nízka</span></td>
-              <td class="reports__build" data-label="Build"><span class="reports__version">0.3.2</span> <span class="reports__platform">Windows</span></td>
-              <td class="reports__votes" data-label="Potvrdenia">+4</td>
-              <td class="reports__status" data-label="Stav">
-                <div class="select select--compact select--status">
-                  <select aria-label="Stav hlásenia #128">
-                    <option value="nove">Nové</option>
-                    <option value="potvrdene">Potvrdené</option>
-                    <option value="riesi-sa">Rieši sa</option>
-                    <option value="opravene">Opravené</option>
-                    <option value="zamietnute" selected>Zamietnuté</option>
-                  </select>
-                </div>
-              </td>
-              <td class="reports__priority" data-label="Priorita">
-                <div class="select select--compact select--priority">
-                  <select aria-label="Priorita hlásenia #128">
-                    <option value="" selected>Nastaviť</option>
-                    <option value="nizka">Nízka</option>
-                    <option value="stredna">Stredná</option>
-                    <option value="vysoka">Vysoká</option>
-                  </select>
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <td class="reports__id">#126</td>
-              <td class="reports__title">
-                <a class="report-link" href="#">Tiene postáv blikajú na grafikách Intel</a>
-                <div class="report-meta">
-                  <ul class="tags" aria-label="Tagy">
-                    <li class="tag">Grafika</li>
-                  </ul>
-                  <span>kubo · <time datetime="2026-10-08">8. 10.</time></span>
-                  <span class="meta-count"><span class="icon icon--comment" aria-hidden="true"></span><span class="visually-hidden">Komentáre:</span>2</span>
-                  <span class="meta-count"><span class="icon icon--clip" aria-hidden="true"></span><span class="visually-hidden">Prílohy:</span>2</span>
-                </div>
-              </td>
-              <td class="reports__type">Chyba</td>
-              <td class="reports__severity"><span class="severity severity--medium">Stredná</span></td>
-              <td class="reports__build" data-label="Build"><span class="reports__version">0.3.2</span> <span class="reports__platform">Windows</span></td>
-              <td class="reports__votes" data-label="Potvrdenia">+1</td>
-              <td class="reports__status" data-label="Stav">
-                <div class="select select--compact select--status">
-                  <select aria-label="Stav hlásenia #126">
-                    <option value="nove">Nové</option>
-                    <option value="potvrdene">Potvrdené</option>
-                    <option value="riesi-sa">Rieši sa</option>
-                    <option value="opravene" selected>Opravené</option>
-                    <option value="zamietnute">Zamietnuté</option>
-                  </select>
-                </div>
-              </td>
-              <td class="reports__priority" data-label="Priorita">
-                <div class="select select--compact select--priority">
-                  <select aria-label="Priorita hlásenia #126">
-                    <option value="">Nastaviť</option>
-                    <option value="nizka">Nízka</option>
-                    <option value="stredna" selected>Stredná</option>
-                    <option value="vysoka">Vysoká</option>
-                  </select>
-                </div>
-              </td>
-            </tr>
+            <?php foreach ($reports as $report) : ?>
+              <tr>
+                <td class="reports__id">#<?= e($report->getId()) ?></td>
+                <td class="reports__title">
+                  <a class="report-link" href="<?= $link->url('report.edit', ['id' => $report->getId()]) ?>"><?= e($report->getTitle()) ?></a>
+                  <div class="report-meta">
+                    <!-- Tags and author come later with their own entities (Tag, User) -->
+                    <span><time datetime="<?= e(date('Y-m-d\TH:i', strtotime($report->getCreatedAt()))) ?>"><?= e(date('M j, Y', strtotime($report->getCreatedAt()))) ?></time></span>
+                    <span class="meta-count"><span class="icon icon--comment" aria-hidden="true"></span><span class="visually-hidden">Comments:</span>0</span>
+                    <span class="meta-count"><span class="icon icon--clip" aria-hidden="true"></span><span class="visually-hidden">Attachments:</span>0</span>
+                  </div>
+                </td>
+                <td class="reports__type"><?= e($report->getTypeLabel()) ?></td>
+                <td class="reports__severity"><span class="severity severity--<?= e($report->getSeverity()) ?>"><?= e($report->getSeverityLabel()) ?></span></td>
+                <td class="reports__build" data-label="Build"><span class="reports__version"><?= e($report->getBuildVersion()) ?></span></td>
+                <!-- Confirmations (+1) and priority are not in the Report entity yet -->
+                <td class="reports__votes is-zero" data-label="Confirmations">0</td>
+                <td class="reports__status" data-label="Status"><?= e($report->getStatusLabel()) ?></td>
+                <td class="reports__priority" data-label="Priority">—</td>
+                <td class="reports__actions" data-label="Actions">
+                  <div class="row-actions">
+                    <a class="btn btn--small" href="<?= $link->url('report.edit', ['id' => $report->getId()]) ?>">Edit</a>
+                    <!-- Deleting changes data, so it is a small POST form, not a link -->
+                    <form method="post" action="<?= $link->url('report.delete') ?>" data-confirm="Delete report #<?= e($report->getId()) ?>?">
+                      <input type="hidden" name="id" value="<?= e($report->getId()) ?>">
+                      <button class="btn btn--small btn--danger" type="submit">Delete</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <?php endforeach ?>
+            <?php if (count($reports) === 0) : ?>
+              <tr>
+                <td colspan="9">No reports yet.</td>
+              </tr>
+            <?php endif ?>
           </tbody>
         </table>
       </div>
-
-      <!-- Stránkovanie -->
-      <nav class="pagination" aria-label="Stránkovanie hlásení">
-        <p class="pagination__info">Strana 1 z 6</p>
-        <ul class="pagination__list">
-          <li>
-            <span class="page-btn page-btn--disabled" aria-disabled="true">
-              <span aria-hidden="true">‹</span><span class="page-btn__text">Predchádzajúca</span>
-            </span>
-          </li>
-          <li><a class="page-btn" href="<?= $link->url('report.index') ?>" aria-current="page">1</a></li>
-          <li><a class="page-btn" href="#">2</a></li>
-          <li><a class="page-btn" href="#">3</a></li>
-          <li><span class="pagination__ellipsis" aria-hidden="true">…</span></li>
-          <li><a class="page-btn" href="#">6</a></li>
-          <li>
-            <a class="page-btn" href="#" rel="next">
-              <span class="page-btn__text">Ďalšia</span><span aria-hidden="true">›</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
     </section>
   </div>
 </div>
