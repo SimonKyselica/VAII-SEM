@@ -14,7 +14,7 @@
   <nav class="project-nav" aria-label="Project menu">
     <ul class="project-nav__list">
       <li><a class="project-nav__link" href="<?= $link->url('home.index') ?>"<?= $activeItem === 'Main' ? ' aria-current="page"' : '' ?>>Overview</a></li>
-      <li><a class="project-nav__link" href="#">Builds</a></li>
+      <li><a class="project-nav__link" href="<?= $link->url('build.index') ?>"<?= $activeItem === 'Build' ? ' aria-current="page"' : '' ?>>Builds</a></li>
       <li><a class="project-nav__link" href="<?= $link->url('report.index') ?>"<?= $activeItem === 'Report' ? ' aria-current="page"' : '' ?>>Reports <span class="badge">12 new</span></a></li>
       <li><a class="project-nav__link" href="#">Questionnaires</a></li>
       <li><a class="project-nav__link" href="#">Responses</a></li>

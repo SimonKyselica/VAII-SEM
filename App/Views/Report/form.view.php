@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Report;
+use App\Models\Builds;
 
 /** @var \App\Models\Report $report */
 /** @var string[] $errors */
@@ -91,12 +92,19 @@ $pageTitle = $isNew ? 'New report' : 'Edit report #' . $report->getId();
           </div>
         </div>
 
-        <div class="field">
-          <label class="field__label" for="buildVersion">Build version</label>
-          <input class="input" type="text" id="buildVersion" name="buildVersion" value="<?= e($report->getBuildVersion()) ?>"
-                 maxlength="20" required placeholder="e.g. 0.4.1">
-        </div>
-      </div>
+       <div class="field">
+          <label class="field__label" for="buildId">Build</label>
+          <div class="select">
+            <select id="buildId" name="buildId" required>
+              <option value="" disabled <?= $report->getBuildId() === null ? 'selected' : '' ?>>Choose build</option>
+              <?php foreach ($builds as $build) : ?>
+                <option value="<?= e($build->getId()) ?>" <?= $report->getBuildId() === $build->getId() ? 'selected' : '' ?>>
+                  <?= e($build->getVersion() . ' · ' . $build->getPlatformLabel()) ?>
+                </option>
+              <?php endforeach ?>
+            </select>
+          </div>
+        </div> 
 
       <div class="field">
         <label class="field__label" for="description">Description</label>

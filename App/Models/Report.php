@@ -44,21 +44,31 @@ class Report extends Model
      * Properties that setFromRequest() may set from a form. id and createdAt are left out on purpose: the primary key
      * comes from the database and the creation date is set by the controller, never by the user.
      */
-    protected static ?array $fillable = ['title', 'type', 'severity', 'status', 'description', 'buildVersion'];
+    protected static ?array $fillable = ['title', 'type', 'severity', 'status', 'description', 'buildId'];
 
     protected ?int $id = null;
+    protected ?int $buildId = null;
     protected ?string $title = null;
     protected ?string $type = null;
     protected ?string $severity = null;
     // The ORM inserts every column, so a DEFAULT in the database would never be used; the default lives here instead.
     protected ?string $status = 'new';
     protected ?string $description = null;
-    protected ?string $buildVersion = null;
     protected ?string $createdAt = null;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getBuildId(): ?int
+    {
+        return $this->buildId;
+    }
+
+    public function setBuildId(int $buildId): void
+    {
+        $this->buildId = $buildId;
     }
 
     public function getTitle(): ?string
@@ -111,14 +121,8 @@ class Report extends Model
         $this->description = $description;
     }
 
-    public function getBuildVersion(): ?string
-    {
-        return $this->buildVersion;
-    }
-
-    public function setBuildVersion(string $buildVersion): void
-    {
-        $this->buildVersion = $buildVersion;
+    public function getBuild(): ?Build {
+        return $this->getOneRelated(Build::class);
     }
 
     /**

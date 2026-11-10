@@ -1,6 +1,8 @@
 <?php
 /** @var \Framework\Support\LinkGenerator $link */
 /** @var \App\Models\Report[] $reports */
+/** @var \App\Models\Build[] $builds */
+/** @var int $selectedBuildId */
 ?>
 
 <!-- Page header: breadcrumbs, title, actions -->
@@ -80,10 +82,9 @@
             <div class="select">
               <select id="filter-build" name="build">
                 <option value="">All builds</option>
-                <option value="0.4.1">0.4.1</option>
-                <option value="0.4.0">0.4.0</option>
-                <option value="0.3.2">0.3.2</option>
-                <option value="0.3.1">0.3.1</option>
+                <?php foreach ($builds as $build) : ?>
+                  <option value="<?= e($build->getId()) ?>" <?= $selectedBuildId === $build->getId() ? 'selected' : '' ?>><?= e($build->getVersion()) ?></option>
+                <?php endforeach ?>
               </select>
             </div>
           </div>
@@ -181,7 +182,11 @@
                 </td>
                 <td class="reports__type"><?= e($report->getTypeLabel()) ?></td>
                 <td class="reports__severity"><span class="severity severity--<?= e($report->getSeverity()) ?>"><?= e($report->getSeverityLabel()) ?></span></td>
-                <td class="reports__build" data-label="Build"><span class="reports__version"><?= e($report->getBuildVersion()) ?></span></td>
+                <?php $build = $report->getBuild() ?>
+                <td class="reports__build" data-label="Build">
+                  <span class="reports__version"><?= e($build?->getVersion()) ?></span>
+                  <span class="reports__platform"><?= e($build?->getPlatformLabel()) ?></span>
+                </td>
                 <!-- Confirmations (+1) and priority are not in the Report entity yet -->
                 <td class="reports__votes is-zero" data-label="Confirmations">0</td>
                 <td class="reports__status" data-label="Status"><?= e($report->getStatusLabel()) ?></td>

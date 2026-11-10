@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Report;
+use App\Models\Build;
 use Framework\Core\BaseController;
 use Framework\Http\HttpException;
 use Framework\Http\Request;
@@ -21,10 +22,21 @@ class ReportController extends BaseController
      *
      * @return Response The response object containing the rendered HTML for the reports page.
      */
-    public function index(Request $request): Response
+        public function index(Request $request): Response
     {
-        $reports = Report::getAll(orderBy: '`createdAt` desc');
-        return $this->html(['reports' => $reports]);
+        // ?build=3 shows only the reports of build 3 (the link from the builds page, or the filter select)
+        $buildId = (int)$request->value('build');
+        if ($buildId > 0) {
+            $reports = Report::getAll('`buildId` = ?', [$buildId], orderBy: '`createdAt` desc');
+        } else {
+            $reports = Report::getAll(orderBy: '`createdAt` desc');
+        }
+
+        return $this->html([
+            'reports' => $reports,
+            'builds' => Build::getAll(orderBy: '`releasedAt` desc'),
+            'selectedBuildId' => $buildId,
+        ]);
     }
 
     /**
@@ -36,7 +48,7 @@ class ReportController extends BaseController
      */
     public function add(Request $request): Response
     {
-        return $this->html(['report' => new Report(), 'errors' => []], 'form');
+        return $this->form(new Report(), []);
     }
 
     /**
@@ -48,7 +60,7 @@ class ReportController extends BaseController
     public function edit(Request $request): Response
     {
         $report = $this->getReportOr404((int)$request->value('id'));
-        return $this->html(['report' => $report, 'errors' => []], 'form');
+        return $this->form($report, []);
     }
 
     /**
@@ -71,8 +83,7 @@ class ReportController extends BaseController
 
         // Copies only the properties listed in Report::$fillable
         $report->setFromRequest($request);
-        $report->setTitle(trim((string)$report->getTitle()));
-        $report->setBuildVersion(trim((string)$report->getBuildVersion()));
+        $report->setTitle(trim((string)$report->getTitle())); 
         $report->setDescription(trim((string)$report->getDescription()));
 
         if ($report->getId() === null) {
@@ -81,7 +92,7 @@ class ReportController extends BaseController
 
         $errors = $this->validate($report);
         if (count($errors) > 0) {
-            return $this->html(['report' => $report, 'errors' => $errors], 'form');
+            return $this->form($report, $errors);
         }
 
         $report->save();
@@ -142,12 +153,16 @@ class ReportController extends BaseController
             $errors[] = 'Choose a status.';
         }
 
-        if ($report->getBuildVersion() === '') {
-            $errors[] = 'Build version is required.';
-        } elseif (mb_strlen($report->getBuildVersion()) > 20) {
-            $errors[] = 'Build version can have at most 20 characters.';
+        if (Build::getOne($report->getBuildId()) === null) {
+            $errors[] = 'Choose a build.';
         }
 
         return $errors;
+    }
+
+    private function form(Report $report, array $errors): Response
+    {
+        $builds = Build::getAll(orderBy: '`releasedAt` desc');
+        return $this->html(['report' => $report, 'builds' => $builds, 'errors' => $errors], 'form');
     }
 }
