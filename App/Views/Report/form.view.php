@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Report;
-use App\Models\Builds;
 
 /** @var \App\Models\Report $report */
 /** @var string[] $errors */
@@ -105,7 +104,7 @@ $pageTitle = $isNew ? 'New report' : 'Edit report #' . $report->getId();
             </select>
           </div>
         </div> 
-
+        </div>
       <div class="field">
         <label class="field__label" for="description">Description</label>
         <textarea class="input" id="description" name="description" rows="8"
